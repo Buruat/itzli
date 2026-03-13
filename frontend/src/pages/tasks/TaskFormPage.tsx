@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { tasksApi } from '../../api/tasks'
 import { projectsApi } from '../../api/projects'
 import type { ApiErrors, Project } from '../../types'
@@ -8,12 +8,13 @@ import ErrorList from '../../components/ErrorList'
 export default function TaskFormPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const isEdit = Boolean(id)
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [taskType, setTaskType] = useState<'bug' | 'task'>('task')
-  const [projectId, setProjectId] = useState('')
+  const [projectId, setProjectId] = useState(searchParams.get('project_id') ?? '')
   const [timeSpent, setTimeSpent] = useState('')
   const [estimatedTime, setEstimatedTime] = useState('')
   const [deadlineDate, setDeadlineDate] = useState('')

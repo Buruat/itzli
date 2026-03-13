@@ -1,6 +1,8 @@
 export interface Project {
   id: string
   name: string
+  description: string | null
+  image_url: string | null
 }
 
 export interface Task {
@@ -15,3 +17,10 @@ export interface Task {
 }
 
 export type ApiErrors = Record<string, string[]>
+
+export interface User {
+  id: string
+  username: string
+  phone: string
+  photo_url: string | null
+}

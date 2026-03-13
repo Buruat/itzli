@@ -1,10 +1,18 @@
 const BASE_URL = '/api/v1'
 
+function getToken(): string | null {
+  return localStorage.getItem('token')
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const isFormData = options?.body instanceof FormData
+  const token = getToken()
+
   const response = await fetch(`${BASE_URL}${path}`, {
     headers: {
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     ...options,
   })
@@ -20,6 +28,12 @@ export const post = <T>(path: string, body: unknown) =>
 
 export const patch = <T>(path: string, body: unknown) =>
   request<T>(path, { method: 'PATCH', body: JSON.stringify(body) })
+
+export const postFormData = <T>(path: string, body: FormData) =>
+  request<T>(path, { method: 'POST', body })
+
+export const patchFormData = <T>(path: string, body: FormData) =>
+  request<T>(path, { method: 'PATCH', body })
 
 export const destroy = (path: string) =>
   request<void>(path, { method: 'DELETE' })

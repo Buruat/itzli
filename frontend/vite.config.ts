@@ -7,7 +7,8 @@ export default defineConfig({
     host: true,
     port: Number(process.env.PORT_FRONTEND ?? 5173),
     proxy: {
-      '/api': 'http://localhost:3000'
+      '/api': 'http://localhost:3000',
+      '/rails': 'http://localhost:3000'
     }
   }
 })

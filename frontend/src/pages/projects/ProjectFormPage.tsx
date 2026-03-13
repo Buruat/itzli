@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { projectsApi } from '../../api/projects'
 import type { ApiErrors } from '../../types'
@@ -10,13 +10,16 @@ export default function ProjectFormPage() {
   const isEdit = Boolean(id)
 
   const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
   const [errors, setErrors] = useState<ApiErrors>({})
   const [loading, setLoading] = useState(isEdit)
+  const imageRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (id) {
       projectsApi.show(id).then(p => {
         setName(p.name)
+        setDescription(p.description ?? '')
         setLoading(false)
       })
     }
@@ -24,9 +27,14 @@ export default function ProjectFormPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const data = {
+      name,
+      description,
+      image: imageRef.current?.files?.[0] ?? null,
+    }
     const result = isEdit
-      ? await projectsApi.update(id!, { name })
-      : await projectsApi.create({ name })
+      ? await projectsApi.update(id!, data)
+      : await projectsApi.create(data)
     if (Object.keys(result.errors).length === 0) {
       navigate('/projects')
     } else {
@@ -50,6 +58,24 @@ export default function ProjectFormPage() {
             value={name}
             onChange={e => setName(e.target.value)}
             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Описание</label>
+          <textarea
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            rows={4}
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Изображение</label>
+          <input
+            type="file"
+            accept="image/*"
+            ref={imageRef}
+            className="w-full text-sm text-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
           />
         </div>
         <div className="flex gap-3">

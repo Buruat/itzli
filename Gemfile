@@ -10,6 +10,8 @@ gem "solid_cache"
 gem "solid_queue"
 
 gem "paranoia"
+gem "pundit"
+gem "bcrypt", "~> 3.1.7"
 
 gem "bootsnap", require: false
 

@@ -46,7 +46,11 @@ export default function ProjectsPage() {
           <tbody>
             {projects.map(p => (
               <tr key={p.id} className="border-b hover:bg-gray-50">
-                <td className="py-2 pr-4 font-medium">{p.name}</td>
+                <td className="py-2 pr-4 font-medium">
+                  <Link to={`/projects/${p.id}`} className="text-indigo-600 hover:text-indigo-800">
+                    {p.name}
+                  </Link>
+                </td>
                 <td className="py-2">
                   <div className="flex gap-3 justify-end">
                     <Link

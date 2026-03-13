@@ -12,7 +12,10 @@ export interface TaskData {
 }
 
 export const tasksApi = {
-  index: () => get<{ tasks: Task[] }>('/tasks').then(r => r.tasks),
+  index: (projectId?: string) => {
+    const url = projectId ? `/tasks?project_id=${projectId}` : '/tasks'
+    return get<{ tasks: Task[] }>(url).then(r => r.tasks)
+  },
   show: (id: string) => get<{ task: Task }>(`/tasks/${id}`).then(r => r.task),
   create: (data: TaskData) =>
     post<{ errors: ApiErrors }>('/tasks', { task: data }),
