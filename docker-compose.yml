@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    entrypoint: /app/docker-entrypoint.sh
+    volumes:
+      - .:/app
+    ports:
+      - "${PORT_EXTERNAL}:${PORT_EXTERNAL}"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    command: sleep infinity
+
+  db:
+    image: postgres:16
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

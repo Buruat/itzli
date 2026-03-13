@@ -1,0 +1,24 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("POSTGRES_HOST", "db") %>
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch("POSTGRES_DB", "itzli_development") %>
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: <%= ENV.fetch("POSTGRES_DB", "itzli_production") %>
+  cache:
+    <<: *primary_production
+    database: <%= ENV.fetch("POSTGRES_DB", "itzli_production") %>_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: <%= ENV.fetch("POSTGRES_DB", "itzli_production") %>_queue
+    migrations_paths: db/queue_migrate

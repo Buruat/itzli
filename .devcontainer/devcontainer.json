@@ -1,0 +1,9 @@
+{
+  "name": "itzli",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "web",
+  "workspaceFolder": "/app",
+  "forwardPorts": [3000, 5432],
+  "postCreateCommand": "bundle install",
+  "remoteUser": "root"
+}
