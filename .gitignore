@@ -7,3 +7,6 @@
 /public/assets
 
 /config/*.key
+
+/frontend/node_modules
+/frontend/dist

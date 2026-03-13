@@ -6,6 +6,7 @@ services:
       - .:/app
     ports:
       - "${PORT_EXTERNAL}:${PORT_EXTERNAL}"
+      - "${PORT_FRONTEND}:${PORT_FRONTEND}"
     depends_on:
       - db
     env_file:
