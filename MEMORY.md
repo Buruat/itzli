@@ -63,6 +63,10 @@
 - Страницы: `LoginPage` (`/login`), `RegisterPage` (`/register`) — вход по phone + password
 - Layout содержит username пользователя + кнопку выхода
 
+## Исправленные ошибки
+
+- Sentry #103938200: Удалена строка `a = i * 2` из `TasksController#index` — вызывала `NameError: undefined local variable or method 'i'` при каждом запросе к `GET /api/v1/tasks`
+
 ## Соглашения
 
 - Все primary key — UUID (`pgcrypto`); настроено глобально в `config/application.rb` через generators
