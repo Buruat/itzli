@@ -20,5 +20,21 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  sentry-webhook:
+    build:
+      context: .
+      dockerfile: docker/sentry-webhook/Dockerfile
+    ports:
+      - "4567:4567"
+    volumes:
+      - .:/app
+      - ${HOME}/.claude:/root/.claude:rw
+      - ${HOME}/.claude.json:/root/.claude.json:rw
+      - claudebot_home:/home/claudebot
+    env_file:
+      - .env
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  claudebot_home:
