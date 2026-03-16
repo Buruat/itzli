@@ -63,6 +63,21 @@
 - Страницы: `LoginPage` (`/login`), `RegisterPage` (`/register`) — вход по phone + password
 - Layout содержит username пользователя + кнопку выхода
 
+## Sentry webhook (автофикс ошибок)
+
+- Сервис `sentry-webhook` (Node.js/Express, порт 4567) принимает webhooks от Sentry
+- При событии `created` запускает `claude -p` от пользователя `claudebot` (non-root)
+- Субагент `.claude/agents/claude-subagent-itzli.md` получает детали ошибки через Sentry MCP, создаёт ветку `fix/sentry-{id}` и PR на GitHub
+- MCP-конфигурация Sentry: `.mcp.json` (использует `SENTRY_AUTH_TOKEN` из `.env`)
+- HMAC-подпись проверяется через `SENTRY_WEBHOOK_SECRET` (необязательно)
+- OAuth-авторизация claude из `${HOME}/.claude` хоста (монтируется в `/root/.claude`)
+
+## Исправленные ошибки
+
+- Sentry ITLL-2 / TEST-999: `NoMethodError: undefined method 'email' for User` в `ApplicationController#set_sentry_user_context` — `current_user.email` заменено на `current_user.username` (у User нет поля email, только username и phone). Ветка: `fix/sentry-TEST-999`.
+- Sentry TEST-1000: `ZeroDivisionError: divided by 0` в `ProjectsController#index` — удалена отладочная строка `a = 1 / 0`. Ветка: `fix/sentry-TEST-1000`.
+- Примечание: `GITHUB_TOKEN` в `.env` — fine-grained PAT без прав на запись в репозиторий (git push возвращает 403). Для push нужен классический PAT со scope `repo` или fine-grained PAT с правом "Contents: Write".
+
 ## Соглашения
 
 - Все primary key — UUID (`pgcrypto`); настроено глобально в `config/application.rb` через generators
