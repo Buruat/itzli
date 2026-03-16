@@ -63,6 +63,16 @@
 - Страницы: `LoginPage` (`/login`), `RegisterPage` (`/register`) — вход по phone + password
 - Layout содержит username пользователя + кнопку выхода
 
+## Исправления ошибок
+
+- Sentry #103935842: удалены два вызова `a = 1 / 0` из `TasksController#index`, вызывавшие `ZeroDivisionError` при каждом запросе к `GET /api/v1/tasks`
+
+## Sentry интеграция
+
+- Gems: `sentry-ruby`, `sentry-rails`
+- Инициализатор: `config/initializers/sentry.rb` — DSN из `ENV["SENTRY_DSN"]`, PII включён, traces_sample_rate = 0.1
+- В `ApplicationController` — `before_action :set_sentry_user_context`: передаёт `id` и `username` текущего пользователя (поля `email` у `User` нет)
+
 ## Соглашения
 
 - Все primary key — UUID (`pgcrypto`); настроено глобально в `config/application.rb` через generators
