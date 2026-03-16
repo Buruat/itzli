@@ -15,6 +15,9 @@ gem "bcrypt", "~> 3.1.7"
 
 gem "bootsnap", require: false
 
+gem "sentry-ruby"
+gem "sentry-rails"
+
 group :development do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 end

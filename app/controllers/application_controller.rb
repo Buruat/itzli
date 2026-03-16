@@ -2,12 +2,19 @@ class ApplicationController < ActionController::API
   include Authentication
   include Pundit::Authorization
 
+  before_action :set_sentry_user_context
   rescue_from Pundit::NotAuthorizedError, with: :forbidden
 
   private
 
   def current_user
     Current.user
+  end
+
+  def set_sentry_user_context
+    return unless current_user
+
+    Sentry.set_user(id: current_user.id, username: current_user.username)
   end
 
   def forbidden
