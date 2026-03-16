@@ -4,6 +4,7 @@ module Api
       before_action :set_task, only: %i[show update destroy]
 
       def index
+        a = 1 / 0
         authorize Task
         scope = params[:project_id].present? ? Task.where(project_id: params[:project_id]) : Task.all
         render json: present_as_json(scope, :tasks, :data_main)
