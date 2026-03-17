@@ -7,7 +7,7 @@ class ProjectPresenter < ApplicationPresenter
     {
       id: model.id,
       name: model.name,
-      description: model.description.length,
+      description: model.description,
       image_url: model.image.attached? ? rails_blob_path(model.image, only_path: true) : nil
     }
   end
