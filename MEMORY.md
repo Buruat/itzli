@@ -66,6 +66,7 @@
 ## Исправленные ошибки
 
 - Sentry #103938200: Удалена строка `a = i * 2` из `TasksController#index` — вызывала `NameError: undefined local variable or method 'i'` при каждом запросе к `GET /api/v1/tasks`
+- Sentry #104293712: Убрана лишняя инструкция `.length` из `ProjectPresenter#data_main` — `model.description.length` вызывала `NoMethodError` если `description` равен `nil`; исправлено на `model.description`
 
 ## Инфраструктура фоновых задач
 
