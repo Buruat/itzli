@@ -67,6 +67,24 @@
 
 - Sentry #103938200: Удалена строка `a = i * 2` из `TasksController#index` — вызывала `NameError: undefined local variable or method 'i'` при каждом запросе к `GET /api/v1/tasks`
 
+## Инфраструктура фоновых задач
+
+- `solid_queue` заменён на **Sidekiq** (gem `sidekiq`)
+- Redis: сервис `redis` в docker-compose, `REDIS_URL=redis://redis:6379/0`
+- `config.active_job.queue_adapter = :sidekiq` в `config/application.rb`
+- Sidekiq-воркер запускается отдельным сервисом `sidekiq` в docker-compose
+- Конфиг: `config/initializers/sidekiq.rb`
+
+## Sentry Webhook
+
+- Эндпоинт: `POST /webhooks/sentry` → `WebhooksController#sentry`
+- Контроллер: `app/controllers/webhooks_controller.rb` — проверяет HMAC-подпись (`SENTRY_WEBHOOK_SECRET`), ставит задачу `SentryFixJob` в очередь
+- Job: `app/jobs/sentry_fix_job.rb` — запускает Claude CLI от пользователя `claudebot` через `su -l claudebot`
+- Claude CLI установлен в образе (`npm install -g @anthropic-ai/claude-code`), gh CLI также в образе
+- Пользователь `claudebot` создаётся в Dockerfile; `~/.claude` копируется с хоста при старте контейнера (логика в `docker-entrypoint.sh`)
+- Удалён отдельный сервис `sentry-webhook` (Node.js/Express контейнер)
+- Удалены переменные `CLAUDE_BIN_PATH`, `CLAUDE_PACKAGE_PATH` из `.env`
+
 ## Соглашения
 
 - Все primary key — UUID (`pgcrypto`); настроено глобально в `config/application.rb` через generators

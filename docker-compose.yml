@@ -4,14 +4,34 @@ services:
     entrypoint: /app/docker-entrypoint.sh
     volumes:
       - .:/app
+      - ${HOME}/.claude:/root/.claude:rw
+      - ${HOME}/.claude.json:/root/.claude.json:rw
+      - claudebot_home:/home/claudebot
     ports:
       - "${PORT_EXTERNAL}:${PORT_EXTERNAL}"
       - "${PORT_FRONTEND}:${PORT_FRONTEND}"
     depends_on:
       - db
+      - redis
     env_file:
       - .env
     command: sleep infinity
+
+  sidekiq:
+    build: .
+    entrypoint: /app/docker-entrypoint.sh
+    command: bundle exec sidekiq
+    volumes:
+      - .:/app
+      - ${HOME}/.claude:/root/.claude:rw
+      - ${HOME}/.claude.json:/root/.claude.json:rw
+      - claudebot_home:/home/claudebot
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    restart: unless-stopped
 
   db:
     image: postgres:16
@@ -20,21 +40,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  sentry-webhook:
-    build:
-      context: .
-      dockerfile: docker/sentry-webhook/Dockerfile
-    ports:
-      - "4567:4567"
+  redis:
+    image: redis:7-alpine
     volumes:
-      - .:/app
-      - ${HOME}/.claude:/root/.claude:rw
-      - ${HOME}/.claude.json:/root/.claude.json:rw
-      - claudebot_home:/home/claudebot
-    env_file:
-      - .env
-    restart: unless-stopped
+      - redis_data:/data
 
 volumes:
   postgres_data:
   claudebot_home:
+  redis_data:
