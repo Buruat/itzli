@@ -22,3 +22,5 @@ model: sonnet
 8. git -C /app worktree remove /tmp/fix-sentry-{id}
 
 Директория /app всегда остаётся на ветке main.
+
+Не обновляй MEMORY.md и никакие другие файлы кроме тех, что требует фикс.
