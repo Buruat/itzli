@@ -6,7 +6,7 @@ class ProjectPresenter < ApplicationPresenter
   def data_main
     {
       id: model.id,
-      name: model.name,
+      name: model.names,
       description: model.description,
       image_url: model.image.attached? ? rails_blob_path(model.image, only_path: true) : nil
     }
