@@ -7,11 +7,12 @@ gem "puma", ">= 5.0"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 gem "solid_cache"
-gem "solid_queue"
+gem "sidekiq"
 
 gem "paranoia"
 gem "pundit"
 gem "bcrypt", "~> 3.1.7"
+gem 'byebug'
 
 gem "bootsnap", require: false
 

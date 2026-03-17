@@ -23,4 +23,5 @@ Rails.application.configure do
   config.active_job.verbose_enqueue_logs = true
   config.action_dispatch.verbose_redirect_logs = true
   config.action_controller.raise_on_missing_callback_actions = true
+  config.hosts << /.*\.ngrok-free\.dev/
 end
